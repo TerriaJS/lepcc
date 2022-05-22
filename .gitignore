@@ -21,3 +21,4 @@
 *_p.c
 .svn
 *.VC.opendb
+build/

@@ -38,6 +38,21 @@ This repository contains a 3D point cloud compression module written in C++. It 
 
 Find a bug or want to request a new feature? Please let us know by submitting an issue. 
 
+## Building the Web Assembly Module
+
+The LEPCC Web Assembly (.wasm) and javascript wrapper library can be built as follows. I used Linux, but it'll probably work on other platforms.
+
+* [Install emscripten](https://emscripten.org/docs/getting_started/downloads.html) (I used v3.1.10).
+* [Install CMake](https://cmake.org/) (any reasonably recent version will do)
+* Make sure Emscripten is in your path by running `source [emsdk]/emsdk_env.sh`.
+* Build and install lepcc by running the following in the lepcc directory:
+
+```
+emcmake cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=./wasm
+cmake --build build --target install
+```
+
+The generated files will be written to the `wasm/bin` subdirectory.
 
 ## Licensing 
 

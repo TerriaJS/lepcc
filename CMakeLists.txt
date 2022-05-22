@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.16)
+
+set(CMAKE_EXECUTABLE_SUFFIX ".html")
 
 project(LEPCC CXX C)
 string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
@@ -26,3 +28,36 @@ target_include_directories(
 
 add_executable(lepcctest ${TEST_SRCS})
 target_link_libraries(lepcctest lepcc)
+
+# These are the `extern "c"` functions exported by the library that we
+# wish to make available to JavaScript.
+list(APPEND EXPORTED_FUNCTIONS
+  lepcc_createContext
+  lepcc_deleteContext
+  lepcc_getBlobInfoSize
+  lepcc_getBlobInfo
+  lepcc_getPointCount
+  lepcc_getRGBCount
+  lepcc_getIntensityCount
+  lepcc_getFlagByteCount
+  lepcc_decodeXYZ
+  lepcc_decodeRGB
+  lepcc_decodeIntensity
+  lepcc_decodeFlagBytes
+)
+
+foreach(FUNC ${EXPORTED_FUNCTIONS})
+  list(APPEND EXPORTED_FUNCTIONS_QUOTED "'_${FUNC}'")
+endforeach()
+
+list(JOIN EXPORTED_FUNCTIONS_QUOTED "," EXPORTED_FUNCTIONS_PARAM)
+
+add_executable(lepcc-wasm src/wasm.cpp)
+target_link_libraries(lepcc-wasm lepcc)
+target_link_options(lepcctest PRIVATE "-sEXPORTED_FUNCTIONS=[${EXPORTED_FUNCTIONS_PARAM}]" "-sEXPORTED_RUNTIME_METHODS=['ccall','cwrap']" "-sMODULARIZE")
+
+install(
+  FILES
+  "$<TARGET_FILE_DIR:lepcc-wasm>/lepcc-wasm.js"
+  "$<TARGET_FILE_DIR:lepcc-wasm>/lepcc-wasm.wasm"
+  TYPE BIN)
