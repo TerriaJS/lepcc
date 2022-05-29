@@ -44,6 +44,8 @@ list(APPEND EXPORTED_FUNCTIONS
   lepcc_decodeRGB
   lepcc_decodeIntensity
   lepcc_decodeFlagBytes
+  malloc
+  free
 )
 
 foreach(FUNC ${EXPORTED_FUNCTIONS})
