@@ -54,7 +54,13 @@ list(JOIN EXPORTED_FUNCTIONS_QUOTED "," EXPORTED_FUNCTIONS_PARAM)
 
 add_executable(lepcc-wasm src/wasm.cpp)
 target_link_libraries(lepcc-wasm lepcc)
-target_link_options(lepcc-wasm PRIVATE "-sEXPORTED_FUNCTIONS=[${EXPORTED_FUNCTIONS_PARAM}]" "-sEXPORTED_RUNTIME_METHODS=['ccall','cwrap']" "-sMODULARIZE")
+target_link_options(
+  lepcc-wasm
+  PRIVATE
+    "-sEXPORTED_FUNCTIONS=[${EXPORTED_FUNCTIONS_PARAM}]"
+    "-sEXPORTED_RUNTIME_METHODS=['ccall','cwrap','setValue','getValue','writeArrayToMemory']"
+    "-sMODULARIZE"
+)
 
 install(
   FILES
